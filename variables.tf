@@ -16,11 +16,6 @@ variable "local_admin_username"{
  description = "admin username"
 }
 
-variable "admin_username"{
- type = string
- description = "admin username"
- 
-}
 
 variable "admin_password"{
  type = string
@@ -36,7 +31,7 @@ variable "rdsh_count" {
 
 variable "host_pool_name" {
   description = "Name of the RDS host pool"
-  default     = ""
+  default     = "WVD-TF-HP"
 }
 
 variable "vm_prefix" {
@@ -44,35 +39,28 @@ variable "vm_prefix" {
 }
 
 
-variable "registration_expiration_hours" {
-  description = "**OPTIONAL**: The expiration time for registration in hours"
-  default     = "48"
-}
 
 variable "domain_name" {
   type = string
-  description = "**OPTIONAL**: Name of the domain to join"
+  description = "Name of the domain to join"
+
 }
 
 variable "domain_user_upn" {
   type = string
-  description = "**OPTIONAL**: UPN of the user to authenticate with the domain"
+  description = "UPN of the user to authenticate with the domain"
  
 }
 
 variable "domain_password" {
   type = string
-  description = "**OPTIONAL**: Password of the user to authenticate with the domain"
+  description = "Password of the user to authenticate with the domain"
  
 }
 
-variable "base_url" {
-  description = "**OPTIONAL**: The URL in which the RDS components exist"
-  default     = "https://raw.githubusercontent.com/Azure/RDS-Templates/master/wvd-templates"
-}
 
 variable "vm_size" {
-  description = "**OPTIONAL**: Size of the machine to deploy"
+  description = "Size of the machine to deploy"
   default     = "Standard_F2s"
 }
 
@@ -90,10 +78,10 @@ variable "adVnet"{
 variable "adRG"{
  type = string
  default = "RG-WVD-Internal"
- description = "resource group name"
+ description = "resource group name for AD VM"
 }
 
 variable "adVnetID"{
  type = string
-  description = "resource group name"
+  description = "resource id for vnet"
 }
