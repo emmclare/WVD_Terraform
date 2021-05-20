@@ -102,27 +102,25 @@ resource "azurerm_virtual_machine_extension" "vmext_dsc" {
   
   settings = <<-SETTINGS
     {
-      "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration.zip",
+      "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_3-10-2021.zip",
       "configurationFunction": "Configuration.ps1\\AddSessionHost",
       "properties": {
-      "HostPoolName":"azurerm_virtual_desktop_host_pool.HP.name",
-      "registrationInfoToken": "PrivateSettingsRef:privateregistrationtoken"
+      "HostPoolName":"${azurerm_virtual_desktop_host_pool.HP.name}"
+      
       }
     }
     SETTINGS
     
 protected_settings = <<PROTECTED_SETTINGS
   {
-    "Items" : {
-      "privateregistrationtoken": "azurerm_virtual_desktop_host_pool.HP.registration_info[0].token"
+    "properties": {
+      "registrationInfoToken": "${local.registration_token}"
     }
          
   }
 PROTECTED_SETTINGS
 
- lifecycle {
-    ignore_changes = [ settings, protected_settings ]
-  }
+
 
   depends_on = [ azurerm_virtual_machine_extension.domain_join, azurerm_virtual_desktop_host_pool.HP ]
 }
