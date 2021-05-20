@@ -1,3 +1,7 @@
+resource "time_rotating" "wvd_token" {
+  rotation_days = 30
+}
+
 # Configure the Azure provider
 terraform {
   required_providers {
@@ -20,7 +24,7 @@ resource "azurerm_resource_group" "resourcegroup" {
 resource "azurerm_virtual_network" "VNet" {
     name                = "WVD-TF-VNet"
     address_space       = ["10.1.0.0/16"]
-    dns_servers         = ["10.0.0.4"]
+    dns_servers         = ["10.0.0.4","168.63.129.16"]
     location            = var.deploylocation
     resource_group_name = azurerm_resource_group.resourcegroup.name
     
@@ -80,8 +84,8 @@ resource "azurerm_virtual_desktop_host_pool" "HP" {
   location            = azurerm_resource_group.resourcegroup.location
   resource_group_name = azurerm_resource_group.resourcegroup.name
 
-  name                     = "WVD-TF-HP"
-  friendly_name            = "WVD-TF-HP"
+  name                     = var.host_pool_name
+  friendly_name            = var.host_pool_name
   validate_environment     = true
   custom_rdp_properties    = "audiocapturemode:i:1;audiomode:i:0;"
   description              = "WVD-TF-HP Terraform HostPool"
@@ -89,7 +93,8 @@ resource "azurerm_virtual_desktop_host_pool" "HP" {
   maximum_sessions_allowed = 50
   load_balancer_type       = "DepthFirst"
   registration_info {
-    expiration_date = timeadd(timestamp(), "24h")
+    expiration_date = time_rotating.wvd_token.rotation_rfc3339
+
   }
 }
 
