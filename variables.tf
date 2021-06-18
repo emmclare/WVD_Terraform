@@ -85,3 +85,12 @@ variable "adVnetID"{
  type = string
   description = "resource id for vnet"
 }
+
+variable "avdusers"{
+  description = "AVD users"
+  default = []
+}
+
+variable "aadgroupname"{
+  description = "Azure Active Directory Group for AVD users"
+}
