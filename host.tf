@@ -8,7 +8,7 @@ locals {
 
 
 #generate the random local machine pw
-resource "random_string" "wvd-local-password" {
+resource "random_string" "avd-local-password" {
   count            = "${var.rdsh_count}"
   length           = 16
   special          = true
@@ -18,7 +18,7 @@ resource "random_string" "wvd-local-password" {
 
 
 # Create a NIC for the Session Host VM
-resource "azurerm_network_interface" "wvd_vm_nic" {
+resource "azurerm_network_interface" "avd_vm_nic" {
   count                     = "${var.rdsh_count}"
   name                      = "${var.vm_prefix}-${count.index +1}-nic"
   resource_group_name       = var.rgname
@@ -32,16 +32,16 @@ resource "azurerm_network_interface" "wvd_vm_nic" {
 }
 
 # Create the Session Host VM
-resource "azurerm_windows_virtual_machine" "wvd_vm" {
+resource "azurerm_windows_virtual_machine" "avd_vm" {
   count                 = "${var.rdsh_count}"
   name                  = "${var.vm_prefix}-${count.index + 1}"
   resource_group_name   = var.rgname
   location              = var.deploylocation
   size                  = var.vm_size
-  network_interface_ids = ["${azurerm_network_interface.wvd_vm_nic.*.id[count.index]}"]
+  network_interface_ids = ["${azurerm_network_interface.avd_vm_nic.*.id[count.index]}"]
   provision_vm_agent    = true
     admin_username = "${var.local_admin_username}"
-    admin_password = "${random_string.wvd-local-password.*.result[count.index]}"
+    admin_password = "${random_string.avd-local-password.*.result[count.index]}"
   
   os_disk {
     name                 = "${lower(var.vm_prefix)}-${count.index +1}"
@@ -61,7 +61,7 @@ resource "azurerm_windows_virtual_machine" "wvd_vm" {
 resource "azurerm_virtual_machine_extension" "domain_join" {
   count                 = "${var.rdsh_count}"
   name                       = "${var.vm_prefix}-${count.index +1}-domainJoin"
-  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_vm.*.id[count.index]
+  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher                  = "Microsoft.Compute"
   type                       = "JsonADDomainExtension"
   type_handler_version       = "1.3"
@@ -93,8 +93,8 @@ PROTECTED_SETTINGS
 # VM Extension for Desired State Config
 resource "azurerm_virtual_machine_extension" "vmext_dsc" {
     count                 = "${var.rdsh_count}"
-  name                       = "${var.vm_prefix}${count.index +1}-wvd_dsc"
-  virtual_machine_id         = azurerm_windows_virtual_machine.wvd_vm.*.id[count.index]
+  name                       = "${var.vm_prefix}${count.index +1}-avd_dsc"
+  virtual_machine_id         = azurerm_windows_virtual_machine.avd_vm.*.id[count.index]
   publisher                  = "Microsoft.Powershell"
   type                       = "DSC"
   type_handler_version       = "2.73"
