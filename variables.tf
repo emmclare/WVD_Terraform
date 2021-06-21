@@ -6,7 +6,7 @@ variable "deploylocation" {
 
 variable "rgname"{
  type = string
- default = "WVD-TF"
+ default = "AVD-TF"
  description = "resource group name"
 }
 
@@ -25,13 +25,13 @@ variable "admin_password"{
 
 
 variable "rdsh_count" {
-  description = "**OPTIONAL**: Number of WVD machines to deploy"
+  description = "Number of WVD machines to deploy"
   default     = 2
 }
 
 variable "host_pool_name" {
   description = "Name of the RDS host pool"
-  default     = "WVD-TF-HP"
+  default     = "AVD-TF-HP"
 }
 
 variable "vm_prefix" {
@@ -77,7 +77,7 @@ variable "adVnet"{
 
 variable "adRG"{
  type = string
- default = "RG-WVD-Internal"
+ default = "RG-AD"
  description = "resource group name for AD VM"
 }
 
@@ -94,3 +94,29 @@ variable "avdusers"{
 variable "aadgroupname"{
   description = "Azure Active Directory Group for AVD users"
 }
+
+
+variable "NetApp_acct_name"{
+  default = "AVD_NetApp"
+}
+
+variable "NetApp_pool_name"{
+  default = "AVD_NetApp_pool"
+}
+
+variable "NetApp_volume_name"{
+  default = "AVD_NetApp_volume"
+}
+variable "NetApp_smb_name"{
+  default = "AVDNetApp"
+}
+
+variable "NetApp_volume_path"{
+  default = "AVDNetAppVolume"
+  
+}
+
+variable "NetApp_subnet_name"{
+  default = "NetAppSubnet"
+}
+
